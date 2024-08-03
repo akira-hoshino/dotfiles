@@ -170,6 +170,8 @@ alias ghp='(){gh pr view $1 -w}'
 # zstyle ':vcs_info:git:*' formats 'on branch %b'
 
 # ----------------------------------------------------------------
+
+export ANDROID_SDK=/Users/ah/Library/Android/sdk
 # flutter
 # export PATH="$PATH:/Users/ah/development/flutter/bin"
 
