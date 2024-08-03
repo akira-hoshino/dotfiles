@@ -132,6 +132,7 @@ alias gst="git status --short --branch"
 alias gstv="git status -v"
 alias gpush='git push -u origin "$(gb)"'
 alias lg='lazygit'
+alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 # 現在いるブランチにマージ済のローカルブランチを削除するコマンド
 alias gbclear="git branch --merged | egrep -v '\*|develop|main'| xargs git branch -d"
 
@@ -152,6 +153,8 @@ alias ssh-igk='ssh -oUserKnownHostsFile=/dev/null -oStrictHostKeyChecking=no'
 alias dc='docker-compose'
 alias dps='docker ps'
 alias nv='NVIM_APPNAME="nvim-LazyVim" nvim'
+alias nva='NVIM_APPNAME="nvim-Kabin" nvim'
+alias nvb='NVIM_APPNAME="nvim-Nv" nvim'
 alias diff='colordiff'
 
 alias coded='code --disable-extensions'
@@ -161,6 +164,10 @@ alias gpdeploy='php deployer.phar deploy dev -vvv --branch='
 alias gpw='gh pr list | fzf | awk '{print $1}' | xargs gh pr view --web'
 alias -g PR='`gh pr list | fzf | head -n 1 | cut -f1`'
 alias ghp='(){gh pr view $1 -w}'
+alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
+alias sart='sail artisan'
+alias clr='clear'
+alias dvc='devcontainer'
 # ----------------------------------------------------------------
 # Load version control information
 # autoload -Uz vcs_info
