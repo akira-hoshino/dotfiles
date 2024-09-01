@@ -136,8 +136,8 @@ alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 # 現在いるブランチにマージ済のローカルブランチを削除するコマンド
 alias gbclear="git branch --merged | egrep -v '\*|develop|main'| xargs git branch -d"
 
-alias ll="exa -lg --icons"
-alias lld="exa -lg --icons -D"
+alias ll="eza -al --group-directories-first"
+alias ls="eza"
 alias lla="ll -a"
 alias gp="git push -u origin"
 alias gb="git rev-parse --abbrev-ref HEAD"
