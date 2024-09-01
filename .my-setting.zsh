@@ -17,16 +17,16 @@ eval "$(anyenv init -)"
 # ----------
 
 # https://qiita.com/strsk/items/9151cef7e68f0746820d
-function peco-src () {
-  local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
-  if [ -n "$selected_dir" ]; then
-    BUFFER="cd ${selected_dir}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N peco-src
-bindkey '^]' peco-src
+# function peco-src () {
+#   local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
+#   if [ -n "$selected_dir" ]; then
+#     BUFFER="cd ${selected_dir}"
+#     zle accept-line
+#   fi
+#   zle clear-screen
+# }
+# zle -N peco-src
+# bindkey '^]' peco-src
 
 alias de='docker exec -it $(docker ps | peco | cut -d " " -f 1) /bin/bash'
 
@@ -72,6 +72,18 @@ bindkey '^[' peco-cdr
 # -----------
 # -- fzf --
 # -----------
+function fzf-ghq() {
+  # local src=$(ghq list | fzf --preview "ls -laTp $(ghq root)/{} | tail -n+4 | awk '{print \$9\"/\"\$6\"/\"\$7 \" \" \$10}'")
+  local src=$(ghq list | fzf --reverse --border --preview "bat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
+  if [ -n "$src" ]; then
+    BUFFER="cd $(ghq root)/$src"
+    zle accept-line
+  fi
+  zle -R -c
+}
+zle -N fzf-ghq
+bindkey '^]' fzf-ghq
+
 function fzf-git-branch() {
   git rev-parse HEAD > /dev/null 2>&1 || return
 
@@ -108,6 +120,15 @@ function fzf-git-checkout() {
 zle -N fzf-git-checkout
 bindkey '^b' fzf-git-checkout
 
+# fzf ssh
+function fzf-ssh() {
+  local host=$(grep -E "^Host " ~/.ssh/config | sed -e 's/Host[ ]*//g' | fzf --height 50% --ansi --no-multi )
+  if [ -n "$host" ]; then
+    echo $host
+    ssh $host
+  fi
+}
+alias ss="fzf-ssh"
 
 # -----------
 # -- alias --
