@@ -130,6 +130,22 @@ function fzf-ssh() {
 }
 alias ss="fzf-ssh"
 
+function fzf-mail() {
+  local emails
+  emails=$(himalaya list -s 5000 -w 150)
+  # echo "$emails" | fzf --reverse --preview="echo {} | awk '{print \$1}' | xargs -I {} himalaya read {} | bat" --preview-window=right:50%
+  local selected_email
+  selected_email=$(echo "$emails" | fzf --reverse --preview="echo {} | awk '{print \$1}' | xargs -I {} himalaya read {} | bat --color=always --style=header,grid --line-range :80" --preview-window=right:40%)
+  # 選択されたメールのIDを抽出
+  local email_id
+  email_id=$(echo "$selected_email" | awk '{print $1}')
+
+  # 選択されたメールの内容を表示
+  echo "himalaya read $email_id"
+  himalaya read "$email_id" | bat
+}
+alias hima="fzf-mail"
+
 # -----------
 # -- alias --
 # -----------
