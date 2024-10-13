@@ -1,0 +1,15 @@
+# 全てのファイルを一度、無視
+/*
+
+# さらに、ドットから始まる設定ファイルを無視
+/.*
+
+# 無視したくないファイル -> ![ファイル名] で指定
+!/.config/karabiner/*
+!/.gitignore
+!/.my-setting.zsh
+!/.tmux.conf
+!/.wezterm.lua
+!/.zprofile
+!/.zshrc
+!/RectangleConfig.json
