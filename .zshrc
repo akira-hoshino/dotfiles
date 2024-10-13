@@ -1,4 +1,4 @@
-source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
+# source /usr/local/opt/powerlevel10k/powerlevel10k.zsh-theme
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -30,6 +30,8 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
+
+# zstyle ':completion:*' fzf-search-display true
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -71,14 +73,20 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+        aws
         autojump
         brew
         git
+        fzf
         zsh-autosuggestions
         zsh-syntax-highlighting
+        zsh-completions
 )
 
+# autoload -U compinit && compinit
+
 source $ZSH/oh-my-zsh.sh
+# source $HOME/.oh-my-zsh/custom/plugins/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 
 # User configuration
 
@@ -107,14 +115,34 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # その他の設定
 source ~/.my-setting.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ${HOME}/.ghcup/env
+# source ${HOME}/.ghcup/env
 # Bob neovim version manager path
 [ -d ${HOME}/.local/share/bob/nvim-bin ] && {
   export PATH="${HOME}/.local/share/bob/nvim-bin${PATH:+:${PATH}}"
+}
+if command -v zoxide > /dev/null; then
+  eval "$(zoxide init zsh)"
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Source the Lazyman shell initialization for aliases and nvims selector
+# shellcheck source=.config/nvim-Lazyman/.lazymanrc
+[ -f ~/.config/nvim-Lazyman/.lazymanrc ] && source ~/.config/nvim-Lazyman/.lazymanrc
+# Source the Lazyman .nvimsbind for nvims key binding
+# shellcheck source=.config/nvim-Lazyman/.nvimsbind
+[ -f ~/.config/nvim-Lazyman/.nvimsbind ] && source ~/.config/nvim-Lazyman/.nvimsbind
+export PATH="/opt/homebrew/opt/php@8.3/bin:$PATH"
+export PATH="/opt/homebrew/opt/php@8.3/sbin:$PATH"
+. "/Users/hsn/.deno/env"
+# Luarocks bin path
+[ -d ${HOME}/.luarocks/bin ] && {
+  export PATH="${HOME}/.luarocks/bin${PATH:+:${PATH}}"
 }

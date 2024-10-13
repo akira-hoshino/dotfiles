@@ -7,16 +7,19 @@ if wezterm.config_builder then
 end
 
 -- カラースキームの設定
+-- Light --
 -- config.color_scheme = "Homebrew Light (Gogh)"
+-- Dark --
 config.color_scheme = "Tomorrow Night Eighties (Gogh)"
 -- config.color_scheme = "Catppuccin Mocha"
 -- config.color_scheme = "AdventureTime"
 -- config.color_scheme = "Chalk (dark) (terminal.sexy)"
 -- 背景透過
-config.window_background_opacity = 0.96
-config.macos_window_background_blur = 30
+config.window_background_opacity = 0.7
+
+config.macos_window_background_blur = 20
 -- フォントサイズの設定
-config.font_size = 24
+config.font_size = 20
 
 config.window_frame = {
 	-- The font used in the tab bar.
@@ -25,7 +28,12 @@ config.window_frame = {
 	-- Whatever font is selected here, it will have the
 	-- main font setting appended to it to pick up any
 	-- fallback fonts you may have used there.
-	font = wezterm.font({ family = "Roboto", weight = "Bold" }),
+	-- font = wezterm.font({ family = "Roboto", weight = "Bold" }),
+	font = wezterm.font_with_fallback({
+		{ family = "JetBrains Mono", weight = "Medium" },
+		{ family = "Terminus", weight = "Bold" },
+		"Noto Color Emoji",
+	}),
 
 	-- The size of the font in the tab bar.
 	-- Default to 10.0 on Windows but 12.0 on other systems
@@ -41,6 +49,22 @@ config.window_frame = {
 }
 
 config.colors = {
+	cursor_border = "#52ad70",
+
+	-- the foreground color of selected text
+	selection_fg = "black",
+	-- the background color of selected text
+	selection_bg = "#fffacd",
+
+	-- The color of the scrollbar "thumb"; the portion that represents the current viewport
+	scrollbar_thumb = "#222222",
+
+	-- The color of the split lines between panes
+	split = "#444444",
+	-- The default text color
+	foreground = "silver",
+	-- The default background color
+	background = "black",
 	tab_bar = {
 		-- The color of the inactive tab bar edge/divider
 		inactive_tab_edge = "#575757",
