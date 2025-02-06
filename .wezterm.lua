@@ -6,6 +6,9 @@ if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
+-- https://zenn.dev/yuys13/articles/wezterm-settings-trivia
+config.use_ime = true
+
 -- カラースキームの設定
 -- Light --
 -- config.color_scheme = "Homebrew Light (Gogh)"
@@ -15,11 +18,18 @@ config.color_scheme = "Tomorrow Night Eighties (Gogh)"
 -- config.color_scheme = "AdventureTime"
 -- config.color_scheme = "Chalk (dark) (terminal.sexy)"
 -- 背景透過
-config.window_background_opacity = 0.7
+config.window_background_opacity = 0.95
 
 config.macos_window_background_blur = 20
 -- フォントサイズの設定
 config.font_size = 20
+
+config.font = wezterm.font_with_fallback({
+	{ family = "JetBrains Mono", weight = "Medium" },
+	{ family = "Terminus", weight = "Bold" },
+	"ヒラギノ角ゴシック",
+	"Noto Color Emoji",
+})
 
 config.window_frame = {
 	-- The font used in the tab bar.
@@ -32,6 +42,7 @@ config.window_frame = {
 	font = wezterm.font_with_fallback({
 		{ family = "JetBrains Mono", weight = "Medium" },
 		{ family = "Terminus", weight = "Bold" },
+		"ヒラギノ角ゴシック",
 		"Noto Color Emoji",
 	}),
 
@@ -46,6 +57,15 @@ config.window_frame = {
 	-- The overall background color of the tab bar when
 	-- the window is not focused
 	inactive_titlebar_bg = "#333333",
+
+	border_left_width = "0.25cell",
+	border_right_width = "0.25cell",
+	border_bottom_height = "0.25cell",
+	border_top_height = "0.25cell",
+	border_left_color = "purple",
+	border_right_color = "purple",
+	border_bottom_color = "purple",
+	border_top_color = "purple",
 }
 
 config.colors = {
@@ -74,6 +94,56 @@ config.colors = {
 -- ショートカットキー設定
 local act = wezterm.action
 config.keys = {
+	{
+		key = "=",
+		mods = "CTRL",
+		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		key = "-",
+		mods = "CTRL",
+		action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		key = ";",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection("Left"),
+	},
+	{
+		key = "'",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection("Right"),
+	},
+	{
+		key = "/",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection("Down"),
+	},
+	{
+		key = "[",
+		mods = "CTRL",
+		action = wezterm.action.ActivatePaneDirection("Up"),
+	},
+	{
+		key = ";",
+		mods = "SUPER", -- "SUPER"は通常右CMDキーに対応
+		action = wezterm.action.AdjustPaneSize({ "Left", 5 }),
+	},
+	{
+		key = "'",
+		mods = "SUPER", -- "SUPER"は通常右CMDキーに対応
+		action = wezterm.action.AdjustPaneSize({ "Right", 5 }),
+	},
+	{
+		key = "[",
+		mods = "SUPER", -- "SUPER"は通常右CMDキーに対応
+		action = wezterm.action.AdjustPaneSize({ "Up", 5 }),
+	},
+	{
+		key = "/",
+		mods = "SUPER", -- "SUPER"は通常右CMDキーに対応
+		action = wezterm.action.AdjustPaneSize({ "Down", 5 }),
+	},
 	-- Alt(Opt)+Shift+Fでフルスクリーン切り替え
 	{
 		key = "f",
@@ -91,6 +161,17 @@ config.keys = {
 		key = "d",
 		mods = "SHIFT|CTRL",
 		action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }),
+	},
+	-- Split panes with alt+shift+(-|+)
+	{
+		key = "-",
+		mods = "SHIFT|ALT",
+		action = act.SplitVertical({ domain = "CurrentPaneDomain" }),
+	},
+	{
+		key = "=",
+		mods = "SHIFT|ALT",
+		action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }),
 	},
 }
 
