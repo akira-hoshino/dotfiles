@@ -39,26 +39,26 @@ function peco-get-destination-from-cdr() {
 
 ### 過去に移動したことのあるディレクトリを選択。ctrl-[ にバインド
 # cdr
-if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
-    autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
-    add-zsh-hook chpwd chpwd_recent_dirs
-    zstyle ':completion:*' recent-dirs-insert both
-    zstyle ':chpwd:*' recent-dirs-default true
-    zstyle ':chpwd:*' recent-dirs-max 1000
-    zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
-fi
+# if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+#     autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+#     add-zsh-hook chpwd chpwd_recent_dirs
+#     zstyle ':completion:*' recent-dirs-insert both
+#     zstyle ':chpwd:*' recent-dirs-default true
+#     zstyle ':chpwd:*' recent-dirs-max 1000
+#     zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
+# fi
 
-function peco-cdr() {
-  local destination="$(peco-get-destination-from-cdr)"
-  if [ -n "$destination" ]; then
-    BUFFER="cd $destination"
-    zle accept-line
-  else
-    zle reset-prompt
-  fi
-}
-zle -N peco-cdr
-bindkey '^[' peco-cdr
+# function peco-cdr() {
+#   local destination="$(peco-get-destination-from-cdr)"
+#   if [ -n "$destination" ]; then
+#     BUFFER="cd $destination"
+#     zle accept-line
+#   else
+#     zle reset-prompt
+#   fi
+# }
+# zle -N peco-cdr
+# bindkey '^[' peco-cdr
 
 # git branch しつつ選択したところに checkout
 # function peco-gbco() {
@@ -72,6 +72,16 @@ bindkey '^[' peco-cdr
 # -----------
 # -- fzf --
 # -----------
+function fzf-cdr() {
+  target_dir=`cdr -l | sed 's/^[^ ][^ ]*  *//' | fzf`
+  target_dir=`echo ${target_dir/\~/$HOME}`
+  if [ -n "$target_dir" ]; then
+      cd $target_dir
+  fi
+}
+zle -N fzf-cdr
+bindkey "^'" fzf-cdr
+
 function fzf-ghq() {
   # local src=$(ghq list | fzf --preview "ls -laTp $(ghq root)/{} | tail -n+4 | awk '{print \$9\"/\"\$6\"/\"\$7 \" \" \$10}'")
   local src=$(ghq list | fzf --reverse --border --preview "bat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
@@ -109,10 +119,10 @@ function fzf-git-checkout() {
   # using --track and a remote branch name, it is the same as:
   # git checkout -b branchName --track origin/branchName
   if [[ "$branch" = 'remotes/'* ]]; then
-    git checkout --track $branch
+    git switch --track $branch
     return
   else
-    git checkout $branch
+    git switch $branch
     return
   fi
 }
@@ -146,6 +156,34 @@ function fzf-mail() {
 }
 alias hima="fzf-mail"
 
+function fzf-mail2() {
+  local emails
+  # Himalayaでメールリストを取得（ID, DATE, SUBJECT, FROMを表示）
+  emails=$(himalaya list -s 5000 -w 150 | awk '{printf "%-10s %-20s %-50s %s\n", $1, $2" "$3, substr($0, index($0,$4)), $NF}')
+
+  # fzfでメールを選択（ID, DATE, SUBJECT, FROMを表示）
+  local selected_email
+  selected_email=$(echo "$emails" | fzf --reverse \
+    --preview="echo {} | awk '{print \$1}' | xargs -I {} himalaya read {} | bat --color=always --style=header,grid --line-range :80" \
+    --preview-window=right:40% \
+    --header="Press Enter to read email" \
+    --prompt="Select email: ")
+
+  # 選択されたメールのIDを抽出
+  local email_id
+  email_id=$(echo "$selected_email" | awk '{print $1}')
+
+  # 選択されたメールの内容を表示
+  if [[ -n "$email_id" ]]; then
+    echo "Reading email ID: $email_id"
+    himalaya read "$email_id" | bat
+  else
+    echo "No email selected."
+  fi
+}
+alias hima2="fzf-mail2"
+
+
 # -----------
 # -- alias --
 # -----------
@@ -169,6 +207,7 @@ alias gst="git status --short --branch"
 alias gstv="git status -v"
 alias gpush='git push -u origin "$(gb)"'
 alias lg='lazygit'
+alias lz='lazydocker'
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 # 現在いるブランチにマージ済のローカルブランチを削除するコマンド
 alias gbclear="git branch --merged | egrep -v '\*|develop|main'| xargs git branch -d"
